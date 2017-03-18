@@ -25,7 +25,7 @@ SECRET_KEY = 'c3*-btx1x+ozyc=o4d9$yns%e49cl5k1ibbgw(xyndc)sa^)i2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.103']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -79,7 +79,7 @@ DATABASES = {
         'NAME': 'so_dashboard',
         'USER': 'rolight',
         'PASSWORD': 'loulinhui',
-        'HOST': '192.168.1.103',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }

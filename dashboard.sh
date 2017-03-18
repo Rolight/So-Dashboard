@@ -23,6 +23,11 @@ check_exec_success() {
 CurDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LogDir=/data/so-dashboard/log
 TmpDir=/data/so-dashboard/tmp
+UwsgiLogDir=/data/so-dashboard/log/uwsgi
+
+mkdir -p $LogDir
+mkdir -p $TmpDir
+mkdir -p $UwsgiLogDir
 
 RuntimeImage="daocloud.io/rolight/so-dashboard:latest"
 ShellImage="daocloud.io/rolight/so-dashboard:latest"
@@ -62,8 +67,8 @@ start() {
 
   docker run -d --name so-dashboard \
     -e "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}" \
+    -p 8080:8080 \
     --volumes-from so-dashboard-data \
-    --net=host \
     --restart=always \
     --log-opt max-size=10m \
     --log-opt max-file=9 \
