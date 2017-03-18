@@ -43,6 +43,11 @@ DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-dashboard.settings.default}
 # get host ip
 HostIP="$(ip route get 1 | awk '{print $NF;exit}')"
 
+runserver(){
+    export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+    python manage.py runserver
+}
+
 create_data_volume(){
   docker inspect so-dashboard-data &> /dev/null
   if [[ "$?" == "1" ]]; then
@@ -103,7 +108,7 @@ shell() {
 
   docker run --rm -it \
     -e "LANG=C.UTF-8" \
-    -e "DJANGO_SETTINGS_MODULE=dashboard.settings.test" \
+    -e "DJANGO_SETTINGS_MODULE=dashboard.settings.default" \
     --volumes-from so-dashboard-data \
     --net=host \
     ${ShellImage} \
@@ -154,6 +159,7 @@ case "$Action" in
   shell) shell "$@" ;;
   test) test "$@" ;;
   manage) manage "$@" ;;
+  runserver) runserver ;;
   *)
     echo "Usage:"
     echo "./dashboard.sh start|stop|restart"
