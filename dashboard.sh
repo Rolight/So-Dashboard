@@ -41,8 +41,8 @@ fi
 DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-dashboard.settings.default}
 
 # get host ip
-HostIP="$( python -c "import socket; print(socket.gethostbyname(socket.gethostname()))" )"
-echo $HostIP > localaddr.ini
+# HostIP="$( python -c "import socket; print(socket.gethostbyname(socket.gethostname()))" )"
+# echo $HostIP > localaddr.ini
 
 runserver(){
     export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
