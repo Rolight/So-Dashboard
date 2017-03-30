@@ -16,7 +16,7 @@ class WebsiteSerialzer(serializers.ModelSerializer):
 
 class WebsiteAllowedDomainSerializer(serializers.ModelSerializer):
     website_id = serializers.PrimaryKeyRelatedField(
-        srouce='website',
+        source='website',
         queryset=Website.objects.all()
     )
 
@@ -27,18 +27,18 @@ class WebsiteAllowedDomainSerializer(serializers.ModelSerializer):
 
 class WebsiteUrlPatternSerializer(serializers.ModelSerializer):
     website_id = serializers.PrimaryKeyRelatedField(
-        srouce='website',
+        source='website',
         queryset=Website.objects.all()
     )
 
     class Meta:
-        model = WebsiteUrlPatternSerializer
+        model = WebsiteUrlPattern
         fields = ('id', 'website_id', 'pattern_type', 'pattern')
 
 
-class WebsiteSelector(serializers.ModelSerializer):
+class WebsiteSelectorSerializer(serializers.ModelSerializer):
     website_id = serializers.PrimaryKeyRelatedField(
-        srouce='website',
+        source='website',
         queryset=Website.objects.all()
     )
 

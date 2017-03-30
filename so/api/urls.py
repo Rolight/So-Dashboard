@@ -13,8 +13,36 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
+from rest_framework_nested import routers
 
+from so.api import views
+
+router = routers.SimpleRouter()
+router.register(r'websites', views.WebsiteViewSet)
+router.register(r'websiteallowdomains', views.WebsiteAllowedDomainViewSet)
+router.register(r'websiteurlpatterns', views.WebsiteUrlPatternViewSet)
+router.register(r'websiteselectors', views.WebsiteSelectorViewSet)
+
+website_parent_router = routers.NestedSimpleRouter(
+    router, r'websites', lookup='website')
+
+website_parent_router.register(
+    r'websiteallowdomains',
+    views.WebsiteAllowedDomainNestedViewSet,
+    base_name='websiteallowdomains'
+)
+website_parent_router.register(
+    r'websiteurlpatterns',
+    views.WebsiteUrlPatternNestedViewSet,
+    base_name='websiteurlpatterns'
+)
+website_parent_router.register(
+    r'websiteselectors',
+    views.WebsiteSelectorNestedViewSet,
+    base_name='websiteselectors'
+)
 
 urlpatterns = [
+    url(r'^', include(router.urls)),
 ]

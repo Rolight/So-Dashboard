@@ -140,6 +140,11 @@ manage() {
     python manage.py $@
 }
 
+init() {
+    manage migrate
+    manage createsuperuser
+}
+
 
 ##################
 # Start of script
@@ -161,12 +166,14 @@ case "$Action" in
   test) test "$@" ;;
   manage) manage "$@" ;;
   runserver) runserver ;;
+  init) init ;;
   *)
     echo "Usage:"
     echo "./dashboard.sh start|stop|restart"
     echo "./dashboard.sh reload [full]"
     echo "./dashboard.sh shell"
     echo "./dashboard.sh manage"
+    echo "./dashboard.sh init"
     exit 1
     ;;
 esac
