@@ -45,4 +45,5 @@ website_parent_router.register(
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^', include(website_parent_router.urls)),
 ]
