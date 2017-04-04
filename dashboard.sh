@@ -29,10 +29,7 @@ mkdir -p $LogDir
 mkdir -p $TmpDir
 mkdir -p $UwsgiLogDir
 
-RuntimeImage="daocloud.io/rolight/so-dashboard:latest"
-ShellImage="daocloud.io/rolight/so-dashboard:latest"
-TestImage="daocloud.io/rolight/so-dashboard:latest"
-CronImage="daocloud.io/rolight/so-dashboard:latest"
+BaseImage="daocloud.io/rolight/so-dashboard:feature-login-63f1996"
 
 if [[ -a ${CurDir}/envs.sh ]]; then
   source ${CurDir}/envs.sh
@@ -59,7 +56,7 @@ create_data_volume(){
       alpine /bin/true
 
     docker run --rm --volumes-from so-dashboard-data \
-      ${RuntimeImage} mkdir -p logs/uwsgi/ logs/cron/
+      ${BaseImage} mkdir -p logs/uwsgi/ logs/cron/
   fi
 
 }
@@ -73,12 +70,12 @@ start() {
 
   docker run -d --name so-dashboard \
     -e "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}" \
-    -p 8080:8080 \
+    -p 8081:8081 \
     --volumes-from so-dashboard-data \
     --restart=always \
     --log-opt max-size=10m \
     --log-opt max-file=9 \
-    ${RuntimeImage} \
+    ${BaseImage} \
     uwsgi --ini /usr/src/app/dashboard/uwsgi.ini -b 99999
 
   check_exec_success "$?" "start so-dashboard container"
@@ -86,7 +83,7 @@ start() {
   docker run --rm --volumes-from so-dashboard-data \
     -e "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}" \
     --net=host \
-    ${RuntimeImage} python3 manage.py migrate
+    ${BaseImage} python3 manage.py migrate
 
 }
 
@@ -100,7 +97,7 @@ reload() {
   docker run --rm --volumes-from so-dashboard-data \
     -e "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}" \
     --net=host \
-    ${RuntimeImage} python3 manage.py migrate
+    ${BaseImage} python3 manage.py migrate
   docker kill -s HUP so-dashboard
 }
 
@@ -112,7 +109,7 @@ shell() {
     -e "DJANGO_SETTINGS_MODULE=dashboard.settings.default" \
     --volumes-from so-dashboard-data \
     --net=host \
-    ${ShellImage} \
+    ${BaseImage} \
     bash
 }
 
@@ -124,7 +121,7 @@ test() {
     -e "LANG=C.UTF-8" \
     --volumes-from so-dashboard-data \
     --net=host \
-    ${TestImage} \
+    ${BaseImage} \
     python manage.py test "$@"
 }
 
@@ -136,7 +133,7 @@ manage() {
     -e "LANG=C.UTF-8" \
     --volumes-from so-dashboard-data \
     --net=host \
-    ${ShellImage} \
+    ${BaseImage} \
     python manage.py $@
 }
 
