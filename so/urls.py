@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from so.views import home_page_view
+from so.views import (
+    home_page_view,
+    user_login_view,
+    user_logout_view
+)
 
 
 urlpatterns = [
-    url(r'^$', home_page_view, name='home_page')
+    url(r'^$', home_page_view, name='home_page'),
+    url(r'^login/$', user_login_view, name='user_login'),
+    url(r'^logout/$', user_logout_view, name='user_logout'),
 ]

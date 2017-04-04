@@ -3,16 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <!-- 引入样式 -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+  <link href="https://cdn.bootcss.com/element-ui/1.2.7/theme-default/index.css" rel="stylesheet">
 </head>
 <body>
+        <div id="navbar">
+            <el-row>
+                <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                    <el-menu-item index="home">接入式搜索引擎系统</el-menu-item>
+                    <el-menu-item index="websites"><i class="el-icon-upload"></i>索引站点</el-menu-item>
+                    <el-menu-item index="spiders"><i class="el-icon-time"></i>爬虫任务</el-menu-item>
+                    <el-menu-item index="logout" v-if="login === true">登出</el-menu-item>
+                </el-menu>
+            </el-row>
+        </div>
     {% block content %}
     {% endblock %}
+    <style>
+    .el-row {
+        margin-bottom: 20px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    .el-col {
+        border-radius: 4px;
+    }
+    </style>
 </body>
-  <!-- 先引入 Vue -->
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
-  <!-- 引入组件库 -->
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-  {% block vue %}
-  {% endblock %}
+<!-- 先引入 Vue -->
+<script src="https://cdn.bootcss.com/vue/2.2.6/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="https://cdn.bootcss.com/element-ui/1.2.7/index.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.16.0/axios.min.js"></script>
+<script>
+var navbar = new Vue({
+    el: '#navbar',
+    data: {
+        activeIndex2: '1',
+        login: true
+    },
+    methods: {
+        handleSelect(key, keyPath) {
+            switch(key) {
+                case 'home':
+                window.location.href="{% url 'home_page' %}"
+                break;
+            }
+            console.log(key, keyPath);
+        }
+    }
+})
+</script>
+{% block vue %}
+{% endblock %}
 </html>
