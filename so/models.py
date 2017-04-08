@@ -13,8 +13,7 @@ class TimestampedModel(models.Model):
 
 
 class Website(TimestampedModel):
-    user = models.ForeignKey(User)
-    title = models.CharField(max_length=64, verbose_name='标题')
+    title = models.CharField(max_length=64, verbose_name='标题', unique=True)
     sleep_seconds = models.IntegerField(default=3, verbose_name='爬取间隔时间')
     schedule_type = models.SmallIntegerField(
         choices=constant.SCHEDULE_CHOICES,
@@ -25,9 +24,6 @@ class Website(TimestampedModel):
         default=0,
         verbose_name='页面过期时间'
     )
-
-    class Meta:
-        unique_together = ('user', 'title')
 
 
 class WebsiteAllowedDomain(TimestampedModel):

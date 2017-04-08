@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from rest_framework_nested import routers
-from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_jwt.views import (
+    obtain_jwt_token, verify_jwt_token
+)
 
 from so.api import views
 
@@ -47,5 +49,6 @@ website_parent_router.register(
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include(website_parent_router.urls)),
-    url(r'^login/$', obtain_jwt_token)
+    url(r'^login/$', obtain_jwt_token),
+    url(r'^user/$', verify_jwt_token),
 ]

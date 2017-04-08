@@ -29,7 +29,7 @@ mkdir -p $LogDir
 mkdir -p $TmpDir
 mkdir -p $UwsgiLogDir
 
-BaseImage="daocloud.io/rolight/so-dashboard:feature-login-63f1996"
+BaseImage="daocloud.io/rolight/so-dashboard:feature-login-fdbb6a8"
 
 if [[ -a ${CurDir}/envs.sh ]]; then
   source ${CurDir}/envs.sh
