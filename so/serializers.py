@@ -12,6 +12,8 @@ class WebsiteSerialzer(serializers.ModelSerializer):
 
     class Meta:
         model = Website
+        fields = ('id', 'title', 'sleep_seconds', 'schedule_type',
+                  'expire_seconds')
 
 
 class WebsiteAllowedDomainSerializer(serializers.ModelSerializer):
