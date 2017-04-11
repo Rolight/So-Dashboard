@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
 
 from so.models import (
     Website,
@@ -27,7 +28,8 @@ class WebsiteAllowedDomainNestedViewSet(ModelViewSet):
     def list(self, request, website_pk):
         self.queryset = WebsiteAllowedDomain.objects.filter(
             website_id=website_pk)
-        return super().list(request)
+        data = sl.WebsiteAllowedDomainSerializer(self.queryset, many=True).data
+        return Response(data=data)
 
 
 class WebsiteAllowedDomainViewSet(ModelViewSet):
@@ -48,7 +50,8 @@ class WebsiteUrlPatternNestedViewSet(ModelViewSet):
     def list(self, request, website_pk):
         self.queryset = WebsiteUrlPattern.objects.filter(
             website_id=website_pk)
-        return super().list(request)
+        data = sl.WebsiteUrlPatternSerializer(self.queryset, many=True).data
+        return Response(data=data)
 
 
 class WebsiteUrlPatternViewSet(ModelViewSet):
@@ -69,7 +72,8 @@ class WebsiteSelectorNestedViewSet(ModelViewSet):
     def list(self, request, website_pk):
         self.queryset = WebsiteSelector.objects.filter(
             website_id=website_pk)
-        return super().list(request)
+        data = sl.WebsiteSelectorSerializer(self.queryset, many=True).data
+        return Response(data=data)
 
 
 class WebsiteSelectorViewSet(ModelViewSet):
