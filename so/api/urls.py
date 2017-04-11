@@ -23,7 +23,7 @@ from so.api import views
 
 router = routers.SimpleRouter()
 router.register(r'websites', views.WebsiteViewSet)
-router.register(r'websiteallowdomains', views.WebsiteAllowedDomainViewSet)
+router.register(r'websitealloweddomains', views.WebsiteAllowedDomainViewSet)
 router.register(r'websiteurlpatterns', views.WebsiteUrlPatternViewSet)
 router.register(r'websiteselectors', views.WebsiteSelectorViewSet)
 
@@ -31,9 +31,9 @@ website_parent_router = routers.NestedSimpleRouter(
     router, r'websites', lookup='website')
 
 website_parent_router.register(
-    r'websiteallowdomains',
+    r'websitealloweddomains',
     views.WebsiteAllowedDomainNestedViewSet,
-    base_name='websiteallowdomains'
+    base_name='websitealloweddomains'
 )
 website_parent_router.register(
     r'websiteurlpatterns',

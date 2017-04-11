@@ -9,27 +9,11 @@ from so.models import (
 
 
 class WebsiteSerialzer(serializers.ModelSerializer):
-    allowed_domains = serializers.SerializerMethodField()
-    url_patterns = serializers.SerializerMethodField()
-    selectors = serializers.SerializerMethodField()
 
     class Meta:
         model = Website
-        fields = ('title', 'sleep_seconds', 'schedule_type',
-                  'expire_seconds', 'allowed_domains',
-                  'url_patterns', 'selectors')
-
-    def get_allowed_domains(self, instance):
-        allowed_domains = WebsiteAllowedDomain.objects.filter(website=instance)
-        return WebsiteAllowedDomainSerializer(allowed_domains, many=True).data
-
-    def get_url_patterns(self, instance):
-        url_patterns = WebsiteUrlPattern.objects.filter(website=instance)
-        return WebsiteUrlPatternSerializer(url_patterns, many=True).data
-
-    def get_selectors(self, instance):
-        selectors = WebsiteSelector.objects.filter(website=instance)
-        return WebsiteSelectorSerializer(selectors, many=True).data
+        fields = ('id', 'title', 'sleep_seconds', 'schedule_type',
+                  'expire_seconds')
 
 
 class WebsiteAllowedDomainSerializer(serializers.ModelSerializer):
