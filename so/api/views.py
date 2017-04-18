@@ -48,8 +48,12 @@ class WebsiteUrlPatternNestedViewSet(ModelViewSet):
         return super().create(request)
 
     def list(self, request, website_pk):
+        data = request.data
+        pattern_type = data.get('type', 0)
         self.queryset = WebsiteUrlPattern.objects.filter(
-            website_id=website_pk)
+            website_id=website_pk,
+            pattern_type=pattern_type
+        )
         data = sl.WebsiteUrlPatternSerializer(self.queryset, many=True).data
         return Response(data=data)
 
