@@ -25,6 +25,9 @@ class Website(TimestampedModel):
         verbose_name='页面过期时间'
     )
 
+    class Meta:
+        ordering = ['-id']
+
 
 class WebsiteAllowedDomain(TimestampedModel):
     website = models.ForeignKey(Website)
