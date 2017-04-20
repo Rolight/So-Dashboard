@@ -48,7 +48,7 @@ class WebsiteUrlPatternNestedViewSet(ModelViewSet):
         return super().create(request)
 
     def list(self, request, website_pk):
-        data = request.data
+        data = request.query_params
         pattern_type = data.get('type', 0)
         self.queryset = WebsiteUrlPattern.objects.filter(
             website_id=website_pk,
