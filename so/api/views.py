@@ -76,6 +76,16 @@ class WebsiteSelectorNestedViewSet(ModelViewSet):
     def list(self, request, website_pk):
         self.queryset = WebsiteSelector.objects.filter(
             website_id=website_pk)
+        data = request.query_params
+        pattern_type = int(data.get('type', 2))
+        if pattern_type == 0:
+            self.queryset = self.queryset.filter(key_name='title')
+        elif pattern_type == 1:
+            self.queryset = self.queryset.filter(key_name='body')
+        elif pattern_type == 2:
+            self.queryset = self.queryset.exclude(
+                key_name__in=['title', 'body']
+            )
         data = sl.WebsiteSelectorSerializer(self.queryset, many=True).data
         return Response(data=data)
 
