@@ -32,6 +32,14 @@ XPATH_PATTERN_CHOICES = (
     (XPATH_PATTERN_CUSTOM, '自定义'),
 )
 
+UNFINISH = 0
+FINISH = 1
+
+TASK_STATUS = (
+    (UNFINISH, 'unfinished'),
+    (FINISH, 'finish'),
+)
+
 constant = _const()
 
 for name, value in locals().copy().items():
