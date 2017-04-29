@@ -10,6 +10,7 @@ from so.models import (
     WebsiteSelector
 )
 from so import serializers as sl
+from so import core
 
 
 class WebsiteViewSet(ModelViewSet):
@@ -106,4 +107,5 @@ class SpiderTaskViewSet(ModelViewSet):
 
     @list_route(methods=['get'], url_path='spiders')
     def list_spiders(self, request):
-        spider_data =
+        spider_data = core.get_spiders()
+        return Response(data=spider_data)
