@@ -1,5 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import list_route, detail_route
+from rest_framework.permissions import AllowAny
 
 from so.models import (
     Website,
@@ -94,3 +96,14 @@ class WebsiteSelectorViewSet(ModelViewSet):
     serializer_class = sl.WebsiteSelectorSerializer
     queryset = WebsiteSelector.objects.all()
     rest_actions = ('retrieve', 'update', 'destroy')
+
+
+class SpiderTaskViewSet(ModelViewSet):
+    serializer_class = sl.WebsiteSerialzer
+    queryset = Website.objects.all()
+    http_method_names = ('get', 'put', 'delete')
+    permission_classes = (AllowAny, )
+
+    @list_route(methods=['get'], url_path='spiders')
+    def list_spiders(self, request):
+        spider_data =
