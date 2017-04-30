@@ -12,6 +12,7 @@ from so.models import (
 )
 from so import serializers as sl
 from so import core
+from so.constant import constant
 
 
 class WebsiteViewSet(ModelViewSet):
@@ -103,7 +104,7 @@ class WebsiteSelectorViewSet(ModelViewSet):
 class SpiderTaskViewSet(ModelViewSet):
     serializer_class = sl.WebsiteSerialzer
     queryset = Website.objects.all()
-    http_method_names = ('get', 'put', 'delete')
+    rest_actions = ('list', 'update', 'destory', 'retrieve')
     permission_classes = (AllowAny, )
 
     @list_route(methods=['get'], url_path='spiders')
@@ -111,13 +112,13 @@ class SpiderTaskViewSet(ModelViewSet):
         spider_data = core.get_spiders()
         return Response(data=spider_data)
 
-    @list_route(methods=['get'])
-    def get_spider_tasks(self, request):
+    def list(self, request):
         data = request.query_params
         spider = data.get('spider')
         if not spider:
             return Response()
-        tasks = SpiderTask.objects.filter(spider=spider)[:10]
+        tasks = SpiderTask.objects.filter(spider=spider).order_by(
+            '-id')[:10]
         data = sl.SpiderTaskSerializer(tasks, many=True).data
         return Response(data=data)
 
@@ -152,11 +153,8 @@ class SpiderTaskViewSet(ModelViewSet):
         log_lines = spider_task.logs.split('\n')
         return Response(data=log_lines[line:])
 
-    @detail_route(methods=['put'])
-    def update_status(self, request, pk):
+    def update(self, request, pk):
         spider_task = SpiderTask.objects.get(pk=pk)
-        data = request.data
-        status = data.get('status')
-        spider_task.status = status
+        spider_task.status = constant.FINISH
         spider_task.save()
         return Response()

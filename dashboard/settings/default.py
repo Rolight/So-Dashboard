@@ -26,6 +26,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.200.10.1']
 
+ES_HOST = [
+    {
+        'host': '10.200.10.1',
+        'port': 9200
+    },
+]
+
 
 # Application definition
 
