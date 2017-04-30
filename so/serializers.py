@@ -5,6 +5,7 @@ from so.models import (
     WebsiteAllowedDomain,
     WebsiteUrlPattern,
     WebsiteSelector,
+    SpiderTask,
 )
 
 
@@ -47,3 +48,14 @@ class WebsiteSelectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = WebsiteSelector
         fields = ('id', 'website_id', 'key_name', 'xpath')
+
+
+class SpiderTaskSerializer(serializers.ModelSerializer):
+    website_id = serializers.PrimaryKeyRelatedField(
+        source='website',
+        queryset=Website.objects.all()
+    )
+
+    class Meta:
+        model = SpiderTask
+        fields = ('id', 'website_id', 'status', 'spider')

@@ -16,4 +16,4 @@ def key_of_task_log(task_id):
 
 def key_of_task_command(task_id, command):
     return 'so.core.task.{task_id}.{command}'.format(
-        task_id=self.task_id, command=command)
+        task_id=task_id, command=command)

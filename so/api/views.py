@@ -7,7 +7,8 @@ from so.models import (
     Website,
     WebsiteAllowedDomain,
     WebsiteUrlPattern,
-    WebsiteSelector
+    WebsiteSelector,
+    SpiderTask
 )
 from so import serializers as sl
 from so import core
@@ -109,3 +110,53 @@ class SpiderTaskViewSet(ModelViewSet):
     def list_spiders(self, request):
         spider_data = core.get_spiders()
         return Response(data=spider_data)
+
+    @list_route(methods=['get'])
+    def get_spider_tasks(self, request):
+        data = request.query_params
+        spider = data.get('spider')
+        if not spider:
+            return Response()
+        tasks = SpiderTask.objects.filter(spider=spider)[:10]
+        data = sl.SpiderTaskSerializer(tasks, many=True).data
+        return Response(data=data)
+
+    @list_route(methods=['delete'], url_path='clear')
+    def stop_spider_tasks(self, request):
+        data = request.query_params
+        spider = data.get('spider')
+        if not spider:
+            return Response()
+        core.stop_spider_task(spider)
+        return Response()
+
+    @detail_route(methods=['put'], url_path='sync')
+    def sync_log(self, request, pk):
+        data = request.data
+        spider = data.get('spider')
+        if not spider:
+            return Response()
+        core.fetch_log(pk, spider)
+        return Response()
+
+    @detail_route(methods=['get'], url_path='log')
+    def get_log(self, request, pk):
+        try:
+            spider_task = SpiderTask.objects.get(pk=pk)
+        except SpiderTask.DoesNotExist:
+            return Response()
+
+        data = request.query_params
+        line = int(data.get('line', 0))
+
+        log_lines = spider_task.logs.split('\n')
+        return Response(data=log_lines[line:])
+
+    @detail_route(methods=['put'])
+    def update_status(self, request, pk):
+        spider_task = SpiderTask.objects.get(pk=pk)
+        data = request.data
+        status = data.get('status')
+        spider_task.status = status
+        spider_task.save()
+        return Response()

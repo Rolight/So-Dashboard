@@ -24,14 +24,7 @@ SECRET_KEY = 'c3*-btx1x+ozyc=o4d9$yns%e49cl5k1ibbgw(xyndc)sa^)i2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-
-
-def mysql_addr():
-    addr = '127.0.0.1'
-    with open('localaddr.ini') as f:
-        addr = f.read().strip()
-    return addr
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.200.10.1']
 
 
 # Application definition
@@ -102,7 +95,7 @@ WSGI_APPLICATION = 'dashboard.wsgi.application'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://192.168.1.102:6379/0",
+        "LOCATION": "redis://10.200.10.1:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -119,7 +112,7 @@ DATABASES = {
         'NAME': 'so_dashboard',
         'USER': 'rolight',
         'PASSWORD': 'loulinhui',
-        'HOST': mysql_addr(),
+        'HOST': '10.200.10.1',
         'PORT': '3306',
     }
 }
