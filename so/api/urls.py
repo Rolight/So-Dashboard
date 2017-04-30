@@ -26,6 +26,7 @@ router.register(r'websites', views.WebsiteViewSet)
 router.register(r'websitealloweddomains', views.WebsiteAllowedDomainViewSet)
 router.register(r'websiteurlpatterns', views.WebsiteUrlPatternViewSet)
 router.register(r'websiteselectors', views.WebsiteSelectorViewSet)
+router.register(r'spidertasks', views.SpiderTaskViewSet)
 
 website_parent_router = routers.NestedSimpleRouter(
     router, r'websites', lookup='website')

@@ -53,3 +53,14 @@ class WebsiteSelector(TimestampedModel):
 
     class Meta:
         unique_together = ('website', 'key_name')
+
+
+class SpiderTask(TimestampedModel):
+    website = models.ForeignKey(Website)
+    spider = models.CharField(max_length=128, default='', db_index=True)
+    logs = models.TextField(null=True, blank=True, default='')
+    status = models.SmallIntegerField(choices=constant.TASK_STATUS,
+                                      default=constant.UNFINISH)
+
+    class Meta:
+        ordering = ['-id']
