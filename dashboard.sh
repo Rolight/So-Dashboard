@@ -29,7 +29,7 @@ mkdir -p $LogDir
 mkdir -p $TmpDir
 mkdir -p $UwsgiLogDir
 
-BaseImage="daocloud.io/rolight/so-dashboard:feature-login-fdbb6a8"
+BaseImage="daocloud.io/rolight/so-dashboard:master-e95edd4"
 
 if [[ -a ${CurDir}/envs.sh ]]; then
   source ${CurDir}/envs.sh
@@ -142,6 +142,29 @@ init() {
     manage createsuperuser
 }
 
+cron() {
+  docker stop so-dashboard-cron 2>/dev/null
+  docker rm -vf so-dashboard-cron 2>/dev/null
+
+  create_data_volume
+
+  action=${1:-start}
+  case $action in
+    stop) exit ;;
+    start)
+      docker run -d --name so-dashboard-cron \
+        --volumes-from so-dashboard-data \
+        -e "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}" \
+        -e "TZ=Asia/Shanghai" \
+        --restart=always \
+        --log-opt max-size=10m \
+        --log-opt max-file=9 \
+        ${BaseImage} \
+        python -u cron.py
+      ;;
+  esac
+}
+
 
 ##################
 # Start of script
@@ -163,6 +186,7 @@ case "$Action" in
   test) test "$@" ;;
   manage) manage "$@" ;;
   runserver) runserver ;;
+  cron) cron "$@" ;;
   init) init ;;
   *)
     echo "Usage:"
@@ -170,6 +194,7 @@ case "$Action" in
     echo "./dashboard.sh reload [full]"
     echo "./dashboard.sh shell"
     echo "./dashboard.sh manage"
+    echo "./dashboard.sh cron"
     echo "./dashboard.sh init"
     exit 1
     ;;

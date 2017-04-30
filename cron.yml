@@ -1,0 +1,9 @@
+hours:
+  - task: audo_crawl -m hour
+weeks:
+  - task: auto_crawl -m month
+    interval: 4
+  - task: auto_crawl -m week
+day:
+  - task: auto_crawl -m day
+    time: '01:00'

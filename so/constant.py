@@ -12,6 +12,13 @@ SCHEDULE_CHOICES = (
     (EVERY_MONTH, '每月'),
 )
 
+SCHEDULE_MODE = (
+    ('hour', EVERY_HOUR),
+    ('day', EVERY_DAY),
+    ('week', EVERY_WEEK),
+    ('month', EVERY_MONTH),
+)
+
 URL_PARSE = 0
 URL_WALK = 1
 URL_START = 2
@@ -44,4 +51,4 @@ constant = _const()
 
 for name, value in locals().copy().items():
     if name.isupper():
-        setattr(constant, name, value)
+            setattr(constant, name, value)
