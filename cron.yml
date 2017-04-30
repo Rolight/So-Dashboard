@@ -6,3 +6,4 @@ weeks:
   - task: auto_crawl -m week
 day:
   - task: auto_crawl -m day
+    time: '01:00'
