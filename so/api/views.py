@@ -104,8 +104,18 @@ class WebsiteSelectorViewSet(ModelViewSet):
 class SpiderTaskViewSet(ModelViewSet):
     serializer_class = sl.WebsiteSerialzer
     queryset = Website.objects.all()
-    rest_actions = ('list', 'update', 'destory', 'retrieve')
+    rest_actions = ('list', 'update', 'destory', 'retrieve', 'create')
     permission_classes = (AllowAny, )
+
+    def create(self, request):
+        data = request.data
+        website_id = data.get('website_id')
+        if not website_id or not \
+                Website.objects.filter(pk=website_id).exists():
+            return Response(data='no website_id')
+        task_data = core.create_website_spider_task(website_id)
+        core.run_task(task_data)
+        return Response(data='success')
 
     @list_route(methods=['get'], url_path='spiders')
     def list_spiders(self, request):

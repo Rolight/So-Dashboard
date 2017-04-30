@@ -81,7 +81,7 @@ def fetch_log(task_id, spider):
         data = redis_cache.lpop(log_key)
         if data:
             log_data.append(data.decode())
-    spider_task.logs += '\n'.join(log_data)
+    spider_task.logs += ''.join(log_data)
     spider_task.save()
 
 
@@ -123,7 +123,7 @@ def create_website_spider_task(website_id):
         website=website, key_name='title')
     task['title_selector'] = title_selector.xpath
 
-    content_selector = WebsiteSelector.objects.filter(
+    content_selector = WebsiteSelector.objects.get(
         website=website, key_name='body')
     task['content_selector'] = content_selector.xpath
 
