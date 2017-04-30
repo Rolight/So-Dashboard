@@ -1,6 +1,7 @@
 import json
 
 from django.conf import settings
+from elasticsearch import Elasticsearch
 
 from so import cache_keys
 from so.cache import redis_cache
@@ -136,3 +137,77 @@ def create_website_spider_task(website_id):
         for s in other_selectors
     ]
     return task
+
+
+def raw_es_query(index, query_body):
+    es_host = settings.ES_HOST
+    es = Elasticsearch(hosts=es_host)
+
+    # query like raw_str
+    if isinstance(query_body, str):
+        res = es.search(
+            index=index,
+            doc_type='fulltext',
+            body={
+                'query': {
+                    'multi_match': {
+                        'query': query_body,
+                        'fields': ['title', 'content']
+                    }
+                },
+                'highlight': {
+                    'fields': {
+                        '*': {}
+                    }
+                }
+            },
+        )
+    else:
+        res = es.search(
+            index=index,
+            doc_type='fulltext',
+            body={
+                'query': {
+                    'match': query_body
+                },
+                'highlight': {
+                    'fields': {
+                        '*': {}
+                    }
+                }
+            },
+        )
+    return res
+
+
+def es_query(data):
+    query_data = data['query']
+    ipp = data.get('ipp', 15)
+    page = data.get('page', 1)
+    index = data.get('index')
+
+    res = raw_es_query(index, query_data)
+
+    total = res['hits']['total']
+    hits_data = []
+
+    for hit in res['hits']['hits']:
+        data = {
+            'score': hit['_score'],
+            'data': hit['highlight']
+        }
+        for field in ('url', 'title'):
+            if field not in data['data']:
+                data['data'][field] = hit['_source'][field]
+        hits_data.append(data)
+
+    str_pos = ipp * (page - 1)
+    end_pos = ipp * page
+    hits_data = hits_data[str_pos:end_pos]
+
+    return {
+        'page': page,
+        'ipp': ipp,
+        'total': total,
+        'hits': hits_data
+    }

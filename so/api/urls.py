@@ -52,4 +52,5 @@ urlpatterns = [
     url(r'^', include(website_parent_router.urls)),
     url(r'^login/$', obtain_jwt_token),
     url(r'^user/$', verify_jwt_token),
+    url(r'^search/$', views.SearchView.as_view()),
 ]

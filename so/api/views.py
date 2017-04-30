@@ -1,3 +1,4 @@
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import list_route, detail_route
@@ -13,6 +14,25 @@ from so.models import (
 from so import serializers as sl
 from so import core
 from so.constant import constant
+
+
+class SearchView(APIView):
+    http_method_names = ('get', 'post')
+    permission_classes = (AllowAny, )
+
+    # search
+    def get(self, request):
+        data = request.data
+        if 'index' not in data or 'query' not in data:
+            return Response(data='need index and query')
+        return Response(data=core.es_query(data))
+
+    # same with get
+    def post(self, request):
+        data = request.data
+        if 'index' not in data or 'query' not in data:
+            return Response(data='need index and query')
+        return Response(data=core.es_query(data))
 
 
 class WebsiteViewSet(ModelViewSet):
@@ -166,5 +186,6 @@ class SpiderTaskViewSet(ModelViewSet):
     def update(self, request, pk):
         spider_task = SpiderTask.objects.get(pk=pk)
         spider_task.status = constant.FINISH
+
         spider_task.save()
         return Response()
