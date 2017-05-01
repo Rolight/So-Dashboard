@@ -139,7 +139,7 @@ def create_website_spider_task(website_id):
     return task
 
 
-def raw_es_query(index, query_body):
+def raw_es_query(index, query_body, ipp=10, page=1):
     es_host = settings.ES_HOST
     es = Elasticsearch(hosts=es_host)
 
@@ -159,8 +159,10 @@ def raw_es_query(index, query_body):
                     'fields': {
                         '*': {}
                     }
-                }
+                },
             },
+            from_=ipp * (page - 1),
+            size=ipp,
         )
     else:
         res = es.search(
@@ -176,6 +178,8 @@ def raw_es_query(index, query_body):
                     }
                 }
             },
+            from_=ipp * (page - 1),
+            size=ipp,
         )
     return res
 
@@ -185,8 +189,9 @@ def es_query(data):
     ipp = data.get('ipp', 15)
     page = data.get('page', 1)
     index = data.get('index')
+    print('ipp: %s, page: %s' % (ipp, page))
 
-    res = raw_es_query(index, query_data)
+    res = raw_es_query(index, query_data, ipp, page)
 
     total = res['hits']['total']
     hits_data = []
@@ -199,11 +204,13 @@ def es_query(data):
         for field in ('url', 'title'):
             if field not in data['data']:
                 data['data'][field] = hit['_source'][field]
+        if isinstance(data['data']['title'], list):
+            data['data']['title'] = data['data']['title'][0]
+        if isinstance(data['data']['content'], list):
+            data['data']['content'] = '...'.join(data['data']['content'])
         hits_data.append(data)
 
-    str_pos = ipp * (page - 1)
-    end_pos = ipp * page
-    hits_data = hits_data[str_pos:end_pos]
+    print('len of hitsdata = %s' % len(hits_data))
 
     return {
         'page': page,
