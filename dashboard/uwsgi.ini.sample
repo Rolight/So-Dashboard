@@ -1,7 +1,7 @@
 [uwsgi]
 # specicy workers, please change this according to the server capacity
-workers = 1
-max-requests = 3
+workers = 8
+max-requests = 40
 enable-threads = true
 
 #set socket listen queue to <n> (default 100, maximum is system dependent)
@@ -24,7 +24,7 @@ logbig = true
 log-5xx = true
 
 # load application
-module = so-dashboard.wsgi:application
+module = dashboard.wsgi:application
 
 # use master process
 master = true
@@ -37,3 +37,5 @@ harakiri-verbose = true
 
 # Some of the supported languages (like python) has the concept of "multiple interpreters". They allows to isolate apps living in the same process. If you do not want this kind of feature use this option.
 single-interpreter = true
+
+# http = 0.0.0.0:8081

@@ -70,13 +70,13 @@ start() {
 
   docker run -d --name so-dashboard \
     -e "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}" \
-    -p 8081:8081 \
+    -p 9039:9039 \
     --volumes-from so-dashboard-data \
     --restart=always \
     --log-opt max-size=10m \
     --log-opt max-file=9 \
     ${BaseImage} \
-    uwsgi --ini /usr/src/app/dashboard/uwsgi.ini -b 99999
+    uwsgi --ini /usr/src/app/dashboard/uwsgi.ini
 
   check_exec_success "$?" "start so-dashboard container"
 
